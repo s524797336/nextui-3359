@@ -1,4 +1,6 @@
+import { Button, NextUIProvider, Tooltip } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
+import { memo, useEffect, useRef, useState } from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,42 +9,43 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+export const Page = memo(function Page() {
+  const [fullscreen, setFullscreen] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const current = ref.current
+    if (!current) {
+      return
+    }
+    if (fullscreen) {
+      current.requestFullscreen()
+    } else {
+      if (document.fullscreenElement) {
+        document.exitFullscreen()
+      }
+    }
+  }, [fullscreen])
+
+  return (
+    <div ref={ref}>
+      <div>I need to see the tooltip in full screen mode and none full screen mode.</div>
+      <div>If i want to see the tooltip in full screen mode, i need to set the portalContainer to the ref div, but error occurs.</div>
+      <ol>
+        <li>1. Click FullScreen button to enter full screen mode.</li>
+        <li>2. Hover over the tooltip to see the error.</li>
+      </ol>
+      <Button onPress={() => setFullscreen((draft) => !draft)}>FullScreen</Button>
+      <Tooltip portalContainer={fullscreen ? ref.current ?? undefined : undefined} content="Hello">Hover me</Tooltip>
+    </div>
+  )
+})
+
 export default function Index() {
   return (
-    <div className="font-sans p-4">
-      <h1 className="text-3xl">Welcome to Remix</h1>
-      <ul className="list-disc mt-4 pl-6 space-y-2">
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/start/quickstart"
-            rel="noreferrer"
-          >
-            5m Quick Start
-          </a>
-        </li>
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/start/tutorial"
-            rel="noreferrer"
-          >
-            30m Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/docs"
-            rel="noreferrer"
-          >
-            Remix Docs
-          </a>
-        </li>
-      </ul>
-    </div>
+    <NextUIProvider className="bg-black text-white dark">
+      <Page />
+    </NextUIProvider>
   );
 }

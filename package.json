@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "nextui-3359",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -11,6 +11,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.4.2",
     "@remix-run/node": "^2.10.0",
     "@remix-run/react": "^2.10.0",
     "@remix-run/serve": "^2.10.0",
